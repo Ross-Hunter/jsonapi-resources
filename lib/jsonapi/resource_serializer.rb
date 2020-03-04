@@ -97,10 +97,10 @@ module JSONAPI
       end
 
       {
-        'links' => {
-          'self' => self_link(source, requested_relationship),
-          'related' => related_link(source, requested_relationship)
-        },
+        # 'links' => {
+        #   'self' => self_link(source, requested_relationship),
+        #   'related' => related_link(source, requested_relationship)
+        # },
         'data' => data
       }
     end
@@ -165,8 +165,9 @@ module JSONAPI
 
         obj_hash['type'] = format_key(source.class._type.to_s)
 
-        links = links_hash(source)
-        obj_hash['links'] = links unless links.empty?
+        # Just never do linking
+        # links = links_hash(source)
+        # obj_hash['links'] = links unless links.empty?
 
         attributes = attributes_hash(source, fetchable_fields)
         obj_hash['attributes'] = attributes unless attributes.empty?
@@ -425,9 +426,9 @@ module JSONAPI
     def link_object_to_one(source, relationship, include_linkage)
       include_linkage = include_linkage | @always_include_to_one_linkage_data | relationship.always_include_linkage_data
       link_object_hash = {}
-      link_object_hash['links'] = {}
-      link_object_hash['links']['self'] = self_link(source, relationship)
-      link_object_hash['links']['related'] = related_link(source, relationship)
+      # link_object_hash['links'] = {}
+      # link_object_hash['links']['self'] = self_link(source, relationship)
+      # link_object_hash['links']['related'] = related_link(source, relationship)
       link_object_hash['data'] = to_one_linkage(source, relationship) if include_linkage
       link_object_hash
     end
@@ -435,9 +436,9 @@ module JSONAPI
     def link_object_to_many(source, relationship, include_linkage)
       include_linkage = include_linkage | relationship.always_include_linkage_data
       link_object_hash = {}
-      link_object_hash['links'] = {}
-      link_object_hash['links']['self'] = self_link(source, relationship)
-      link_object_hash['links']['related'] = related_link(source, relationship)
+      # link_object_hash['links'] = {}
+      # link_object_hash['links']['self'] = self_link(source, relationship)
+      # link_object_hash['links']['related'] = related_link(source, relationship)
       link_object_hash['data'] = to_many_linkage(source, relationship) if include_linkage
       link_object_hash
     end
