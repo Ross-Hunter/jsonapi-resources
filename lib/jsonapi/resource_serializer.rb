@@ -288,7 +288,10 @@ module JSONAPI
         include_linked_children = ia && !ia[:include_related].empty?
 
         if field_set.include?(name)
-          hash[format_key(name)] = link_object(source, relationship, include_linkage)
+          relation = link_object(source, relationship, include_linkage)
+          if relation
+            hash[format_key(name)] = relation
+          end
         end
 
         # If the object has been serialized once it will be in the related objects list,
@@ -425,22 +428,28 @@ module JSONAPI
 
     def link_object_to_one(source, relationship, include_linkage)
       include_linkage = include_linkage | @always_include_to_one_linkage_data | relationship.always_include_linkage_data
-      link_object_hash = {}
+      # link_object_hash = {}
       # link_object_hash['links'] = {}
       # link_object_hash['links']['self'] = self_link(source, relationship)
       # link_object_hash['links']['related'] = related_link(source, relationship)
-      link_object_hash['data'] = to_one_linkage(source, relationship) if include_linkage
-      link_object_hash
+      # link_object_hash['data'] = to_one_linkage(source, relationship) if include_linkage
+      # link_object_hash
+      if include_linkage
+        { data: to_one_linkage(source, relationship) }
+      end
     end
 
     def link_object_to_many(source, relationship, include_linkage)
       include_linkage = include_linkage | relationship.always_include_linkage_data
-      link_object_hash = {}
+      # link_object_hash = {}
       # link_object_hash['links'] = {}
       # link_object_hash['links']['self'] = self_link(source, relationship)
       # link_object_hash['links']['related'] = related_link(source, relationship)
-      link_object_hash['data'] = to_many_linkage(source, relationship) if include_linkage
-      link_object_hash
+      # link_object_hash['data'] = to_many_linkage(source, relationship) if include_linkage
+      # link_object_hash
+      if include_linkage
+        { data: to_many_linkage(source, relationship) }
+      end
     end
 
     def link_object(source, relationship, include_linkage = false)
